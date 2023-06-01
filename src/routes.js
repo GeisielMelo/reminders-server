@@ -8,14 +8,16 @@ import SessionsController from "./controllers/SessionsController";
 
 const routes = new Router();
 
+
 routes.post("/sessions", SessionsController.create);
+routes.get("/sessions/:email", SessionsController.show);
 routes.post("/users", UsersController.create);
 
 routes.use(auth);
 
 // Temp routes
 routes.get("/users", UsersController.index);
-routes.get("/users/:id", UsersController.show);
+// routes.get("/users/:id", UsersController.show);
 
 // Login
 routes.put("/users/:id", UsersController.update);

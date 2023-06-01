@@ -4,6 +4,25 @@ import { checkPassword } from "../services/password";
 import authConfig from "../config/auth";
 
 class SessionsController {
+  async show(req, res) {
+    const { email } = req.params;
+
+    // Verify if email exists.
+    try {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(204).json();
+      } else {
+        return res.status(200).json();
+      }
+      
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
   async create(req, res) {
     const { email, password } = req.body;
 
