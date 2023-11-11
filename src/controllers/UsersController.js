@@ -2,18 +2,7 @@ import User from "../models/User";
 import { createPasswordHash } from "../services/password";
 
 class UsersController {
-  // Method to list all users.
-  async index(req, res) {
-    try {
-      const users = await User.find();
-      return res.json(users);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: "Internal server error" });
-    }
-  }
-
-  // Method to list a single user.
+  // Method to list a user.
   async show(req, res) {
     try {
       const { id } = req.params;
