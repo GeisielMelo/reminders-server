@@ -3,6 +3,7 @@ import auth from "./middlewares/auth";
 
 import UsersController from "./controllers/UsersController";
 import SessionsController from "./controllers/SessionsController";
+import RepositoriesController from "./controllers/RepositoriesController";
 
 const routes = new Router();
 routes.post("/sessions", SessionsController.create);
@@ -16,10 +17,9 @@ routes.put("/users/:id", UsersController.update);
 routes.delete("/users/:id", UsersController.delete);
 
 // Repositories
-
-
-// Notes
-
+routes.post("/repositories", RepositoriesController.create);
+routes.get("/repositories", RepositoriesController.show);
+routes.patch("/repositories", RepositoriesController.update);
 
 
 export default routes;
