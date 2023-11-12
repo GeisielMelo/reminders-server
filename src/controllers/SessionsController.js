@@ -5,21 +5,23 @@ import authConfig from "../config/auth";
 
 class SessionsController {
   async show(req, res) {
-    const { email } = req.params;
-
-    // Verify if email exists.
     try {
-      const user = await User.findOne({ email });
+      const { id } = req.body;
+
+      // Buscar informações do usuário usando o ID obtido do token
+      const user = await User.findById(id);
 
       if (!user) {
-        return res.status(204).json();
-      } else {
-        return res.status(200).json();
+        return res.status(404).json({ error: "User not found" });
       }
-      
+
+      // Retorna as informações do usuário, incluindo o token
+      return res.json({
+        token: req.headers.authorization,
+      });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: "Internal server error" });
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   }
 

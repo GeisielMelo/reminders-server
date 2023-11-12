@@ -46,6 +46,12 @@ class RepositoriesController {
     try {
       const { id, notes, labels, archived } = req.body;
 
+      const repository = await Repository.findById(id);
+
+      if (!repository) {
+        return res.status(500).json({ success: false, message: "Repository doesn't exists." });
+      }
+
       await Repository.findByIdAndUpdate(
         id,
         {
