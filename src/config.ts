@@ -12,6 +12,9 @@ export default {
   redis: {
     url: process.env.REDIS_URL,
   },
+  mongo: {
+    uri: process.env.MONGODB_URI,
+  },
   auth: {
     secret: process.env.AUTH_SECRET || 'dev',
     expiresIn: process.env.AUTH_EXPIRES_IN || '7d',
