@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
-import User from '@/Database/Models/User'
+import User from '@/database/models/User'
+import encryptPassword from '@app/Users/services/PasswordService'
 
 class UsersController {
   async index(req: Request, res: Response): Promise<Response> {
@@ -8,10 +9,19 @@ class UsersController {
     return res.status(200).json(users)
   }
 
+  async show(req: Request, res: Response): Promise<Response> {
+    const { id } = req.body
+
+    try {
+      const user = await User.findById(id)
+      return res.status(200).json(user)
+    } catch (error) {
+      return res.status(500).json({ error: 'Fail on fetch user.' })
+    }
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body
-
-    console.log(email, password)
 
     try {
       const user = await User.findOne({ email })
@@ -20,18 +30,14 @@ class UsersController {
         return res.status(422).json({ error: `User ${email} already exists` })
       }
 
-      const newUser = await User.create({ email, password })
+      const hash = await encryptPassword(password)
+
+      const newUser = await User.create({ email, password: hash })
 
       return res.status(201).json(newUser)
     } catch (error) {
-      console.log(error)
       return res.status(500).json({ error: 'User creation fail.' })
     }
-  }
-
-  async message(req: Request, res: Response): Promise<Response> {
-    const { message } = req.body
-    return res.status(200).json({ message })
   }
 }
 

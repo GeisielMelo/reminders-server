@@ -2,31 +2,34 @@ import jwt from 'jsonwebtoken'
 import AuthError from '../exceptions/AuthError'
 import config from '../../../config'
 import { getValue, setValue } from '../../../lib/redis'
+import User from '@/database/models/User'
+import decryptPassword from '@app/Auth/services/PasswordService'
 
 export default class AuthService {
   async signIn(
     email: string,
     password: string,
   ): Promise<{ user: object; token: string }> {
-    const user = {
-      id: '123',
-      email: 'admin@admin.com',
-      password: 'secret',
-      fullName: 'Admin',
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      throw new AuthError('User not found')
     }
 
-    if (email !== user.email || password !== user.password) {
+    const passwordDecrypted = await decryptPassword(password, user.password)
+
+    if (!passwordDecrypted) {
       throw new AuthError('Invalid credentials')
     }
 
-    const { id, fullName } = user
+    const { id } = user
 
     // Generate token
     const token = jwt.sign({ id }, config.auth.secret, {
       expiresIn: config.auth.expiresIn,
     })
 
-    return { user: { id, fullName, email }, token }
+    return { user: { id, email }, token }
   }
 
   async signOut(token: string) {
