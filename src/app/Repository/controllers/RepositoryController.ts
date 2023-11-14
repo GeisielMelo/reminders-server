@@ -40,5 +40,30 @@ class RepositoryController {
       return res.status(500).json({ error: 'Repository creation fail.' })
     }
   }
+
+  async update(req: Request, res: Response): Promise<Response> {
+    const { id, notes, labels, archived } = req.body
+
+    try {
+      const repository = await Repository.findOne({ userId: id })
+
+      if (!repository) {
+        return res.status(404).json({ error: 'Repository does not exist.' })
+      }
+
+      await Repository.updateOne(
+        { userId: id },
+        {
+          notes,
+          labels,
+          archived,
+        },
+        { new: true },
+      )
+      return res.status(200).send()
+    } catch (error) {
+      return res.status(500).json({ error: 'Repository update fail.' })
+    }
+  }
 }
 export default new RepositoryController()

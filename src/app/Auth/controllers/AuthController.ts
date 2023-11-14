@@ -10,7 +10,7 @@ class AuthController {
       const { user, token } = await new AuthService().signIn(email, password)
       return res.status(200).json({ user, token })
     } catch (error) {
-      if (error instanceof AuthError) return res.status(401).send()
+      if (error instanceof AuthError) return res.status(404).send()
       return res.status(500).send()
     }
   }
