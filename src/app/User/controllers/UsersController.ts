@@ -1,14 +1,8 @@
 import { Request, Response } from 'express'
 import User from '@/database/models/User'
-import encryptPassword from '@app/Users/services/PasswordService'
+import encryptPassword from '@app/User/services/PasswordService'
 
 class UsersController {
-  async index(req: Request, res: Response): Promise<Response> {
-    const users = [{ id: '456', email: 'mod@mod.com' }]
-
-    return res.status(200).json(users)
-  }
-
   async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.body
 

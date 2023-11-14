@@ -1,4 +1,4 @@
-export default class UsersError extends Error {
+export default class UserError extends Error {
   // eslint-disable-next-line no-useless-constructor
   constructor(message: string) {
     super(message)
