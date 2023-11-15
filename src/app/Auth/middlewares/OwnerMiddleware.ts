@@ -4,7 +4,13 @@ import AuthError from '../exceptions/AuthError'
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers
-  const { id } = req.body
+  let id
+
+  if (req.body && req.body.id) {
+    id = req.body.id
+  } else if (req.params && req.params.id) {
+    id = req.params.id
+  }
 
   if (!authorization) {
     return res.status(401).json({ error: 'No token provided' })
