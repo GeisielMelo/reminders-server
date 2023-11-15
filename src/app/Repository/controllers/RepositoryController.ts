@@ -3,7 +3,7 @@ import Repository from '@/database/models/Repository'
 
 class RepositoryController {
   async show(req: Request, res: Response): Promise<Response> {
-    const { id } = req.body
+    const { id } = req.params
 
     try {
       const repositories = await Repository.findOne({ userId: id })
