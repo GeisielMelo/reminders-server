@@ -28,21 +28,20 @@ class RepositoryController {
         return res.status(422).send()
       }
 
-      await Repository.create({
+      const newRepository = await Repository.create({
         userId: id,
         notes: [],
         labels: [],
-        archived: [],
       })
 
-      return res.status(201).send()
+      return res.status(201).json(newRepository)
     } catch (error) {
       return res.status(500).json({ error: 'Repository creation fail.' })
     }
   }
 
   async update(req: Request, res: Response): Promise<Response> {
-    const { id, notes, labels, archived } = req.body
+    const { id, notes, labels } = req.body
 
     try {
       const repository = await Repository.findOne({ userId: id })
@@ -56,7 +55,6 @@ class RepositoryController {
         {
           notes,
           labels,
-          archived,
         },
         { new: true },
       )
