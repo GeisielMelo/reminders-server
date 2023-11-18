@@ -5,7 +5,7 @@ import ownerMiddleware from '@app/Auth/middlewares/OwnerMiddleware'
 
 const routes = Router()
 
-routes.get('/users', authMiddleware, ownerMiddleware, users.show)
+routes.get('/users/:id', authMiddleware, ownerMiddleware, users.show)
 routes.post('/users', users.create)
 
 export default routes

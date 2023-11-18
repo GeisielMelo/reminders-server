@@ -4,7 +4,7 @@ import encryptPassword from '@app/User/services/PasswordService'
 
 class UsersController {
   async show(req: Request, res: Response): Promise<Response> {
-    const { id } = req.body
+    const { id } = req.params
 
     try {
       const user = await User.findById(id)
