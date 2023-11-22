@@ -1,7 +1,7 @@
 import express, { Application } from 'express'
 import cors from 'cors'
-import routes from '@/routes'
-import '@/database'
+import routes from './routes'
+import './database'
 export default class App {
   app: Application
 
