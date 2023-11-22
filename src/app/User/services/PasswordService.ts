@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import UserError from '@app/User/exceptions/UserError'
+import UserError from '../../User/exceptions/UserError'
 
 // Function to generate an salty password hash.
 export default async (password: string) => {

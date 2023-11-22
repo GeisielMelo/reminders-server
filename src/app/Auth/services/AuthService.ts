@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import AuthError from '../exceptions/AuthError'
 import config from '../../../config'
 import { getValue, setValue } from '../../../lib/redis'
-import User from '@/database/models/User'
-import decryptPassword from '@app/Auth/services/PasswordService'
+import User from '../../../database/models/User'
+import decryptPassword from '../../Auth/services/PasswordService'
 
 export default class AuthService {
   async signIn(

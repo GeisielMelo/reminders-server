@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import Repository from '@/database/models/Repository'
+import Repository from '../../../database/models/Repository'
 
 class RepositoryController {
   async show(req: Request, res: Response): Promise<Response> {

@@ -1,5 +1,5 @@
 import mongoose, { Connection } from 'mongoose'
-import config from '@/config'
+import config from '../config'
 
 class Database {
   connection!: Connection

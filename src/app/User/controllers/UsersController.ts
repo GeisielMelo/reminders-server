@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import User from '@/database/models/User'
-import encryptPassword from '@app/User/services/PasswordService'
+import User from '../../../database/models/User'
+import encryptPassword from '../../User/services/PasswordService'
 
 class UsersController {
   async show(req: Request, res: Response): Promise<Response> {
