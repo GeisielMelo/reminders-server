@@ -6,7 +6,7 @@ import ownerMiddleware from '../Auth/middlewares/OwnerMiddleware'
 const routes = Router()
 
 routes.get('/repositories/:id', authMiddleware, ownerMiddleware, repositories.show)
-routes.post('/repositories', ownerMiddleware, repositories.create)
+routes.post('/repositories', authMiddleware, ownerMiddleware, repositories.create)
 routes.patch('/repositories', authMiddleware, ownerMiddleware, repositories.update)
 
 export default routes

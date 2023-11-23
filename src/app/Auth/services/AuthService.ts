@@ -54,8 +54,13 @@ export default class AuthService {
 
   async validateToken(token: string): Promise<string> {
     try {
-      if (await this.isTokenBlacklisted(token))
+      if (await this.isTokenBlacklisted(token)) {
         throw new AuthError('Token was blacklisted.')
+      }
+
+      if (await this.isTokenExpired(token)) {
+        throw new AuthError('Token expired.')
+      }
 
       const userDecoded = jwt.verify(token, config.auth.secret) as {
         id: string
@@ -76,5 +81,10 @@ export default class AuthService {
 
   private async blacklistToken(token: string): Promise<void> {
     await setValue(`tokens:invalidated:${token}`, true)
+  }
+
+  private async isTokenExpired(token: string): Promise<boolean> {
+    const decoded = jwt.verify(token, config.auth.secret) as { exp: number }
+    return decoded.exp < Math.floor(Date.now() / 1000)
   }
 }
