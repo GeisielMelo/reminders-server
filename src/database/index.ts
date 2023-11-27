@@ -8,7 +8,6 @@ class Database {
     try {
       if (this.connection && this.connection.readyState === 1) return
       await mongoose.connect(config.mongo.uri as string)
-      console.log('Database: Connected.')
     } catch (error) {
       throw new Error('Database: Failed to connect.')
     }
@@ -18,7 +17,6 @@ class Database {
     try {
       if (this.connection && this.connection.readyState !== 0) {
         await mongoose.disconnect()
-        console.log('Database: Disconnected.')
       }
     } catch (error) {
       throw new Error('Database: Failed to disconnect.')
