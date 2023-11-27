@@ -15,9 +15,7 @@ class Database {
 
   async disconnect() {
     try {
-      if (this.connection && this.connection.readyState !== 0) {
-        await mongoose.disconnect()
-      }
+      await mongoose.disconnect()
     } catch (error) {
       throw new Error('Database: Failed to disconnect.')
     }
