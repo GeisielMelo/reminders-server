@@ -21,6 +21,10 @@ class UsersController {
   async create(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body
 
+    if (!email || !password) {
+      return res.status(422).json({ error: 'Missing fields.' })
+    }
+
     try {
       await database.connect()
       const user = await User.findOne({ email })
