@@ -1,39 +1,41 @@
 import jwt from 'jsonwebtoken'
 import AuthError from '../exceptions/AuthError'
 import config from '../../../config'
-import { getValue, setValue } from '../../../lib/redis'
+import database from '../../../database'
 import User from '../../../database/models/User'
+import Token from '../../../database/models/Token'
 import decryptPassword from '../../Auth/services/PasswordService'
 
 export default class AuthService {
-  async signIn(
-    email: string,
-    password: string,
-  ): Promise<{ user: object; token: string }> {
-    const user = await User.findOne({ email })
+  async signIn(email: string, password: string): Promise<{ user: object; token: string }> {
+    try {
+      await database.connect()
+      const user = await User.findOne({ email })
 
-    if (!user) {
-      throw new AuthError('User not found')
+      if (!user) {
+        throw new AuthError('User not found')
+      }
+
+      const passwordDecrypted = await decryptPassword(password, user.password)
+
+      if (!passwordDecrypted) {
+        throw new AuthError('Invalid credentials')
+      }
+
+      const { id } = user
+
+      // Generate token
+      const token = jwt.sign({ id }, config.auth.secret, {
+        expiresIn: config.auth.expiresIn,
+      })
+
+      return { user: { id, email }, token }
+    } finally {
+      await database.disconnect()
     }
-
-    const passwordDecrypted = await decryptPassword(password, user.password)
-
-    if (!passwordDecrypted) {
-      throw new AuthError('Invalid credentials')
-    }
-
-    const { id } = user
-
-    // Generate token
-    const token = jwt.sign({ id }, config.auth.secret, {
-      expiresIn: config.auth.expiresIn,
-    })
-
-    return { user: { id, email }, token }
   }
 
   async signOut(token: string) {
-    console.log(token)
     await this.blacklistToken(token)
   }
 
@@ -47,7 +49,6 @@ export default class AuthService {
         throw new AuthError('Invalid token owner.')
       }
     } catch (error) {
-      console.error(error)
       throw new AuthError('Invalid token.')
     }
   }
@@ -68,19 +69,31 @@ export default class AuthService {
 
       return userDecoded.id
     } catch (error) {
-      console.error(error)
       throw new AuthError('Invalid token.')
     }
   }
 
   private async isTokenBlacklisted(token: string): Promise<boolean> {
-    const blacklistedToken = await getValue(`tokens:invalidated:${token}`)
-
-    return !!blacklistedToken
+    try {
+      await database.connect()
+      const blacklistedToken = await Token.findOne({ token })
+      return !!blacklistedToken
+    } catch (error) {
+      throw new AuthError('Error on blacklisted token.')
+    } finally {
+      await database.disconnect()
+    }
   }
 
   private async blacklistToken(token: string): Promise<void> {
-    await setValue(`tokens:invalidated:${token}`, true)
+    try {
+      await database.connect()
+      await Token.create({ token })
+    } catch (error) {
+      throw new AuthError('Error on blacklist token.')
+    } finally {
+      await database.disconnect()
+    }
   }
 
   private async isTokenExpired(token: string): Promise<boolean> {

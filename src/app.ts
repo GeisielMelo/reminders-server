@@ -1,7 +1,6 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import routes from './routes'
-import './database'
 export default class App {
   app: Application
 
@@ -15,9 +14,7 @@ export default class App {
 
   listen(port: number): void {
     this.app.listen(port, () => {
-      console.log(
-        `\x1b[32m[server] Server started on port \x1b[33m${port}\x1b[32m!\x1b[0m`,
-      )
+      console.log(`\x1b[32m[server] Server started on port \x1b[33m${port}\x1b[32m!\x1b[0m`)
     })
   }
 

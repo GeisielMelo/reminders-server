@@ -4,23 +4,25 @@ import config from '../config'
 class Database {
   connection!: Connection
 
-  constructor() {
-    this.connect()
+  async connect() {
+    try {
+      if (this.connection && this.connection.readyState === 1) return
+      await mongoose.connect(config.mongo.uri as string)
+      console.log('Database: Connected.')
+    } catch (error) {
+      throw new Error('Database: Failed to connect.')
+    }
   }
 
-  connect() {
-    mongoose.connect(config.mongo.uri as string)
-    this.connection = mongoose.connection
-
-    this.connection.on('error', (error) => {
-      console.error('MongoDB connection error:', error)
-    })
-
-    this.connection.once('open', () => {
-      console.log(
-        `\x1b[32m[server] Connected to \x1b[33mMongoDB\x1b[32m!\x1b[0m`,
-      )
-    })
+  async disconnect() {
+    try {
+      if (this.connection && this.connection.readyState !== 0) {
+        await mongoose.disconnect()
+        console.log('Database: Disconnected.')
+      }
+    } catch (error) {
+      throw new Error('Database: Failed to disconnect.')
+    }
   }
 }
 
