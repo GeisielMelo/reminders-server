@@ -3,8 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default {
-  nodeEnv:
-    (process.env.NODE_ENV as 'development' | 'production') || 'production',
+  nodeEnv: (process.env.NODE_ENV as 'development' | 'production') || 'production',
   port: Number(process.env.PORT) || 3000,
   database: {
     url: process.env.DATABASE_URL,
