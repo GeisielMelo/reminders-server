@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import database from '../../../database'
 import User from '../../../database/models/User'
 import encryptPassword from '../../User/services/PasswordService'
 
@@ -7,10 +8,13 @@ class UsersController {
     const { id } = req.params
 
     try {
+      await database.connect()
       const user = await User.findById(id)
       return res.status(200).json(user)
     } catch (error) {
       return res.status(500).json({ error: 'Fail on fetch user.' })
+    } finally {
+      await database.disconnect()
     }
   }
 
@@ -18,6 +22,7 @@ class UsersController {
     const { email, password } = req.body
 
     try {
+      await database.connect()
       const user = await User.findOne({ email })
 
       if (user) {
@@ -31,6 +36,8 @@ class UsersController {
       return res.status(201).json(newUser)
     } catch (error) {
       return res.status(500).json({ error: 'User creation fail.' })
+    } finally {
+      await database.disconnect()
     }
   }
 }

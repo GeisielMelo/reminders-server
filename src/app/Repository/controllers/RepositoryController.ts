@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import database from '../../../database'
 import Repository from '../../../database/models/Repository'
 
 class RepositoryController {
@@ -6,6 +7,7 @@ class RepositoryController {
     const { id } = req.params
 
     try {
+      await database.connect()
       const repositories = await Repository.findOne({ userId: id })
 
       if (!repositories) {
@@ -15,6 +17,8 @@ class RepositoryController {
       return res.status(200).json(repositories)
     } catch (error) {
       return res.status(500).json({ error: 'Fail on fetch user repositories.' })
+    } finally {
+      await database.disconnect()
     }
   }
 
@@ -22,6 +26,7 @@ class RepositoryController {
     const { id } = req.body
 
     try {
+      await database.connect()
       const repository = await Repository.findOne({ userId: id })
 
       if (repository) {
@@ -37,6 +42,8 @@ class RepositoryController {
       return res.status(201).json(newRepository)
     } catch (error) {
       return res.status(500).json({ error: 'Repository creation fail.' })
+    } finally {
+      await database.disconnect()
     }
   }
 
@@ -44,6 +51,7 @@ class RepositoryController {
     const { id, notes, labels } = req.body
 
     try {
+      await database.connect()
       const repository = await Repository.findOne({ userId: id })
 
       if (!repository) {
@@ -61,6 +69,8 @@ class RepositoryController {
       return res.status(200).send()
     } catch (error) {
       return res.status(500).json({ error: 'Repository update fail.' })
+    } finally {
+      await database.disconnect()
     }
   }
 }
