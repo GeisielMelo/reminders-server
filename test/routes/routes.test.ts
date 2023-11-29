@@ -19,6 +19,12 @@ describe('API RESPONSE', () => {
     database.disconnect()
   })
 
+  // Status
+  test('Should return 200 for the /app/pings route.', async () => {
+    const response = await request(server.app).get('/app/pings').send()
+    expect(response.status).toBe(200)
+  })
+
   // User
   test('Should return 422 for the /users route on invalid input.', async () => {
     const response = await request(server.app).post('/users').send({
