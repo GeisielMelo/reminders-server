@@ -33,6 +33,6 @@ export default class App {
   private exceptionHandler() {}
 
   private ping() {
-    setInterval(send, 43200000)
+    setInterval(send, 21600000)
   }
 }
