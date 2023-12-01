@@ -10,7 +10,7 @@ const PingSchema = new Schema<IPingDocument>(
   {
     pingAt: { type: String, required: true },
   },
-  { timestamps: true, expireAfterSeconds: 6 * 60 * 60 },
+  { timestamps: true, expires: 6 * 60 * 60 },
 )
 
 const Ping = model<IPingDocument>('Ping', PingSchema)
