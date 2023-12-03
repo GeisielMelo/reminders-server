@@ -1,8 +1,6 @@
 import express, { Application } from 'express'
-import cron from 'node-cron'
 import cors from 'cors'
 import routes from './routes'
-import send from './app/Ping/services/CreatePing'
 
 export default class App {
   app: Application
@@ -13,7 +11,6 @@ export default class App {
     this.middlewares()
     this.routes()
     this.exceptionHandler()
-    this.ping()
   }
 
   listen(port: number): void {
@@ -33,10 +30,4 @@ export default class App {
   }
 
   private exceptionHandler() {}
-
-  private ping() {
-    cron.schedule('0 23 * * *', async () => {
-      await send()
-    })
-  }
 }
